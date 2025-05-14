@@ -372,7 +372,7 @@ where
             timestamp: UNIX_EPOCH.elapsed().unwrap().as_secs(),
             app_contract: self.env.app_address.clone(),
             chain_id: 42,
-            prev_randao: encode(&[Token::String("0x0000000001".to_string())]),
+            prev_randao: "0x0000000001".to_string(),
         };
 
         let (status, error) = match self.mockup_options.portal_config {
@@ -442,7 +442,7 @@ where
             timestamp: UNIX_EPOCH.elapsed().unwrap().as_secs(),
             app_contract: self.env.app_address.clone(),
             chain_id: 42,
-            prev_randao: encode(&[Token::String("0x0000000001".to_string())]),
+            prev_randao: "0x0000000001".to_string(),
         };
 
         let (status, error) = match self

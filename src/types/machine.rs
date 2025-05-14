@@ -17,7 +17,7 @@ pub struct Metadata {
     pub timestamp: u64,
     pub app_contract: Address,
     pub chain_id: u64,
-    pub prev_randao: Vec<u8>,
+    pub prev_randao: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq)]

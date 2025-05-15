@@ -224,11 +224,7 @@ mod tests {
         let payload = ERC20Wallet::deposit_payload(wallet_address, token_address, value)
             .expect("deposit payload creation failed");
 
-        println!("PAYLOAD GENERATED IS::{:?}", payload);
-
         let result = wallet.deposit(payload.to_vec());
-
-        println!("RESULT RESPONSE::{:?}", result);
 
         assert!(result.is_ok());
 

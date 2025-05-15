@@ -19,7 +19,7 @@ impl Application for EchoApp {
     ) -> Result<FinishStatus, Box<dyn Error>> {
         println!(
             "Advance method called with payload: {:?}",
-            String::from_utf8_lossy(payload)
+            String::from_utf8_lossy(payload),
         );
         env.send_notice(payload).await?;
         env.send_report(payload).await?;

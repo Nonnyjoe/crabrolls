@@ -151,11 +151,8 @@ impl Supervisor {
         loop {
             let input = rollup.finish_and_get_next(status.clone()).await?;
 
-            println!("NEW INPUT RECEIVED:::{:?}", input);
-
             match input {
                 Some(Input::Advance(advance_input)) => {
-                    println!("RECEIVED ADVANCE REQUEST");
                     status =
                         Self::handle_advance_input(&rollup, &options, &app, advance_input).await?;
                 }
@@ -164,7 +161,6 @@ impl Supervisor {
                 }
                 None => {
                     debug!("Waiting for next input");
-                    println!("WAITING FOR NEXT INPUT");
                 }
             }
         }
@@ -177,7 +173,6 @@ impl Supervisor {
         advance_input: Advance,
     ) -> Result<FinishStatus, Box<dyn Error>> {
         debug!("New Advance input: {:?}", advance_input);
-        println!("New Advance input: {:?}", advance_input);
         let app_address: Address = advance_input.metadata.app_contract;
 
         if rollup.get_app_address().await.is_none() {

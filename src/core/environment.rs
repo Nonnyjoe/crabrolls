@@ -27,6 +27,12 @@ pub trait Environment:
         eth_value: u128,
     ) -> impl Future<Output = Result<i32, Box<dyn Error>>> + Send;
 
+    fn send_delegate_voucher(
+        &self,
+        destination: Address,
+        payload: impl AsRef<[u8]> + Send,
+    ) -> impl Future<Output = Result<i32, Box<dyn Error>>> + Send;
+
     fn send_notice(
         &self,
         payload: impl AsRef<[u8]> + Send,
@@ -111,12 +117,24 @@ impl Environment for Rollup {
     ) -> Result<i32, Box<dyn Error>> {
         let voucher = Output::Voucher {
             destination,
-            value: Uint::from(eth_value),
+            value: eth_value.to_be_bytes().to_vec(),
             payload: payload.as_ref().to_vec(),
         };
-        println!("VOUCHER REQUEST IS::{:?}", voucher);
         let response = self.client.post("voucher", &voucher).await?;
-        println!("RESPONSE TO VOUCHER REQUEST IS::{:?}", response);
+        let output: serde_json::Value = self.client.parse_response(response).await?;
+        Ok(output["index"].as_i64().unwrap_or(0) as i32)
+    }
+
+    async fn send_delegate_voucher(
+        &self,
+        destination: Address,
+        payload: impl AsRef<[u8]> + Send,
+    ) -> Result<i32, Box<dyn Error>> {
+        let voucher = Output::DelegateVoucher {
+            destination,
+            payload: payload.as_ref().to_vec(),
+        };
+        let response = self.client.post("delegate-call-voucher", &voucher).await?;
         let output: serde_json::Value = self.client.parse_response(response).await?;
         Ok(output["index"].as_i64().unwrap_or(0) as i32)
     }
@@ -346,7 +364,6 @@ impl Rollup {
 
         let value: Value = self.client.parse_response(response).await?;
         debug!("Received input: {:?}", value);
-        println!("Received input: {:?}", value);
 
         let request_type = value["request_type"]
             .as_str()

@@ -91,7 +91,19 @@ impl Environment for RollupMockup {
         self.handle(Output::Voucher {
             destination,
             payload: payload.as_ref().to_vec(),
-            value: eth_value.into(),
+            value: eth_value.to_be_bytes().to_vec(),
+        })
+        .await
+    }
+
+    async fn send_delegate_voucher(
+        &self,
+        destination: Address,
+        payload: impl AsRef<[u8]> + Send,
+    ) -> Result<i32, Box<dyn Error>> {
+        self.handle(Output::DelegateVoucher {
+            destination,
+            payload: payload.as_ref().to_vec(),
         })
         .await
     }

@@ -49,9 +49,16 @@ pub enum Input {
 #[derive(Serialize, Debug, Clone, PartialEq)]
 #[serde(untagged)]
 pub enum Output {
+    DelegateVoucher {
+        destination: Address,
+        #[serde(serialize_with = "serialize_bytes_as_string")]
+        payload: Vec<u8>,
+    },
+
     Voucher {
         destination: Address,
-        value: Uint,
+        #[serde(serialize_with = "serialize_bytes_as_string")]
+        value: Vec<u8>,
         #[serde(serialize_with = "serialize_bytes_as_string")]
         payload: Vec<u8>,
     },

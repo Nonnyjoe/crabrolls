@@ -51,9 +51,9 @@ pub enum Input {
 pub enum Output {
     Voucher {
         destination: Address,
+        value: Uint,
         #[serde(serialize_with = "serialize_bytes_as_string")]
         payload: Vec<u8>,
-        value: Uint,
     },
     Notice {
         #[serde(serialize_with = "serialize_bytes_as_string")]

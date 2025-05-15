@@ -111,10 +111,12 @@ impl Environment for Rollup {
     ) -> Result<i32, Box<dyn Error>> {
         let voucher = Output::Voucher {
             destination,
+            value: Uint::from(eth_value),
             payload: payload.as_ref().to_vec(),
-            value: eth_value.into(),
         };
+        println!("VOUCHER REQUEST IS::{:?}", voucher);
         let response = self.client.post("voucher", &voucher).await?;
+        println!("RESPONSE TO VOUCHER REQUEST IS::{:?}", response);
         let output: serde_json::Value = self.client.parse_response(response).await?;
         Ok(output["index"].as_i64().unwrap_or(0) as i32)
     }
